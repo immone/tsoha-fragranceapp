@@ -25,6 +25,14 @@ Sovelluksen ominaisuuksia ovat:
 
 1. Luo virtuaaliympäristö komennolla `python3 -m venv venv`
 2. Käynnistä virtuaaliympäristö komennolla `source venv/bin/activate`
-3. Asenna ohjelmiston riippuvuudet komennolla ` pip install -r requirements.txt`
+3. Asenna ohjelmiston riippuvuudet komennolla `pip install -r requirements.txt`
 4. Luo sovelluksen tarvitsema [PostgreSQL-skeema](https://github.com/immone/tsoha-fragranceapp/blob/main/data/schema.sql)
-5. Käynnistä sovellus paikallisesti komennolla `flask run`
+5. Luo tiedoston juureen `.env` tiedosto, jossa on tarvittavat arvot seuraaville muuttujille:
+```
+DATABASE_URL=
+SECRET_KEY=
+FLASK_APP=app.py
+UPLOAD_PATH=static/images
+```
+Tässä `DATABASE_URL` on viittaus  PostgreSQL-tietokantaan, joka on muotoa `postgresql:///xxx` ja `SECRET_KEY` istuntojen salaukseen tarvittava 32-bittinen avain (luo esimerkiksi Pythonin `secrets`-kirjaston avulla komennolla `secrets.token_hex(16)`)
+6. Käynnistä sovellus paikallisesti komennolla `flask run`
