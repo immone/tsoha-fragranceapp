@@ -12,3 +12,11 @@ Sovelluksen ominaisuuksia ovat:
 * Ylläpitäjä voi lisätä tai poistaa hajuveden.
 * Ylläpitäjä voi poistaa tarvittaessa käyttäjän arvion.
 * Ylläpitäjä voi luokitella hajuvesiä eri joukkoihin niiden ominaisuuksien mukaan.
+
+
+## Dokumentaatio
+[Vaatimusmäärittely](https://github.com/immone/tsoha-fragranceapp/blob/main/documentation/vaatimusmaarittely.md)
+[Tuntikirjanpito](https://github.com/immone/tsoha-fragranceapp/blob/main/documentation/tuntikirjanpito.md)
+[Selvitys tekoälyn käytöstä](https://github.com/immone/tsoha-fragranceapp/blob/main/documentation/tekoalyn_kaytto.md)
+
+## Asennus
