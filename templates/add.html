@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Add a new fragrance to the database</h2>
+
+<form action="/add" method="post">
+
+Basic information:
+
+<p>Designer:<br>
+<input type="text" name="designer" minlength="1" maxlength="20"></p>
+
+<p>Name of the fragrance:<br>
+<input type="text" name="name" minlength="1" maxlength="30"></p>
+
+<p>Created in:<br>
+<input type="number" name="year" min="1" max="2030"></p>
+
+<p>Created by:<br>
+<input type="text" name="perfumer" minlength="1" maxlength="30"></p>
+
+<p>Description:<br>
+<input type="text" name="description" minlength="1" maxlength="100"></p>
+
+Notes:
+
+<p>Head notes (separated by commas):<br>
+<input type="text" name="headnotes" minlength="1" maxlength="100"></p>
+
+<p>Middle notes (separated by commas):<br>
+<input type="text" name="middlenotes" minlength="1" maxlength="100"></p>
+
+<p>Bottom notes (separated by commas):<br>
+<input type="text" name="bottomnotes" minlength="1" maxlength="100"></p>
+
+<p>Choose a fragrance picture:<br>
+
+<input type="file" name="file">
+
+<input type="submit" value="Submit">
+
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+
+</form>
+
+<p>
+<a href="/">Palaa takaisin</a>
+
+{% endblock %}
