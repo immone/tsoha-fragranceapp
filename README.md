@@ -22,3 +22,9 @@ Sovelluksen ominaisuuksia ovat:
 [Selvitys tekoälyn käytöstä](https://github.com/immone/tsoha-fragranceapp/blob/main/documentation/tekoalyn_kaytto.md)
 
 ## Asennus
+
+1. Luo virtuaaliympäristö komennolla `python3 -m venv venv`
+2. Käynnistä virtuaaliympäristö komennolla `source venv/bin/activate`
+3. Asenna ohjelmiston riippuvuudet komennolla ` pip install -r requirements.txt`
+4. Luo sovelluksen tarvitsema [[PostgreSQL-skeema](https://github.com/immone/tsoha-fragranceapp/blob/main/data/schema.sql)
+5. Käynnistä sovellus paikallisesti komennolla `flask run`
