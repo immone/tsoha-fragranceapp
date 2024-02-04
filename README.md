@@ -16,7 +16,9 @@ Sovelluksen ominaisuuksia ovat:
 
 ## Dokumentaatio
 [Vaatimusmäärittely](https://github.com/immone/tsoha-fragranceapp/blob/main/documentation/vaatimusmaarittely.md)
+
 [Tuntikirjanpito](https://github.com/immone/tsoha-fragranceapp/blob/main/documentation/tuntikirjanpito.md)
+
 [Selvitys tekoälyn käytöstä](https://github.com/immone/tsoha-fragranceapp/blob/main/documentation/tekoalyn_kaytto.md)
 
 ## Asennus
