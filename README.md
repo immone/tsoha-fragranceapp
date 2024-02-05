@@ -40,4 +40,4 @@ Tässä `DATABASE_URL` on viittaus  PostgreSQL-tietokantaan, joka on muotoa `pos
 
 ## Käyttöesimerkki
 
-Kun olet käynnistänyt ohjelman paikallisesti, avaa selain ja kirjoita siihen osoite `http://127.0.0.1:5000`. Luo ensin uusi käyttäjätunnus (`Log in` -> `Register here`), jonka jälkeen pääset lisäämään tietokantaa uuden hajuveden oikealla olevasta paneelista `Headuser panel` painamalla nappia `Add a new fragrance`.
+Kun olet käynnistänyt ohjelman paikallisesti, avaa selain ja kirjoita siihen osoite `http://127.0.0.1:5000`. Luo ensin uusi käyttäjätunnus (`Log in` -> `Register here`) ja rekisteröidy ylläpitäjänä, jonka jälkeen pääset lisäämään tietokantaa uuden hajuveden oikealla olevasta paneelista `Headuser panel` painamalla nappia `Add a new fragrance`.
