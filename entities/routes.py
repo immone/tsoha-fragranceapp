@@ -81,23 +81,43 @@ def about():
 def admin():
     return render_template("admin.html")
 
-@app.route("/perfumers")
+@app.route("/browse/perfumers")
 def list_perfumers():
     all = fragrance_repository.get_all("perfumers")
-    return render_template("/perfumers.html", perfumers=all)
+    return render_template("all_perfumers.html", perfumers=all)
 
-@app.route("/groups")
+@app.route("/browse/groups")
 def list_groups():
     all = fragrance_repository.get_all("groups")
-    return render_template("/groups.html", groups=all)
+    return render_template("all_groups.html", groups=all)
 
-@app.route("/designers")
+@app.route("/browse/designers")
 def list_designers():
     all = fragrance_repository.get_all("designers")
-    return render_template("/perfumers.html", designers=all)
+    return render_template("all_designers.html", designers=all)
 
-@app.route("/fragrances")
+@app.route("/browse/fragrances")
 def list_fragrances():
     all = fragrance_repository.get_all("fragrances")
-    print(all)
-    return render_template("fragrances.html",  fragrances=all)
+    return render_template("all_fragrances.html", fragrances=all)
+
+@app.route("/fragrances/<int:fragrance_id>")
+def show_fragrance(fragrance_id):
+    one = fragrance_repository.get_one(fragrance_id)
+    return render_template("fragrance.html", fragrance=one)
+
+@app.route("/user_profile")
+def show_user_profile():
+    #one = user_service.get_user_id()
+    return render_template("user_profile.html")
+
+@app.route("/statistics")
+def show_statistics():
+    return render_template("statistics.html")
+
+@app.route("/recent_reviews")
+def list_reviews():
+    all = fragrance_repository.get_all("reviews")
+    if all:
+        all = all[8]
+    return render_template("recent_reviews.html", reviews=all)

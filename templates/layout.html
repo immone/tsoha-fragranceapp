@@ -9,26 +9,26 @@
 <div class="dropdown">
   <button class="dropbtn">Browse</button>
   <div class="dropdown-content">
-    <a href="/fragrances">Fragrances</a>
-    <a href="/designers">Designers</a>
-    <a href="/groups">Groups</a>
-    <a href="/perfumers">Perfumers</a>
+    <a href="/browse/fragrances">Fragrances</a>
+    <a href="/browse/designers">Designers</a>
+    <a href="/browse/groups">Groups</a>
+    <a href="/browse/perfumers">Perfumers</a>
   </div>
 </div>
-<a href="/login">Recent reviews</a>
+<a href="/recent_reviews">Recent reviews</a>
 
 {% if session.user_id %}
-Logged in as: {{ session.user_name }}<a href="/perfumers"> My profile</a>. <a href="/logout">Log out</a>
+  Logged in as: {{ session.user_name }}<a href="/user_profile"> My profile</a>. <a href="/logout">Log out</a>
 {% else %}
-<a href="/login">Log in</a>
+  <a href="/login">Log in</a>
 {% endif %}
 
 {% if session.user_role == 2 %}
-<a href="/admin">Headuser panel</a>
+  <a href="/admin">Headuser panel</a>
 {% endif %}
 
 
 <hr>
-{% block content %}{% endblock %}
+  {% block content %}{% endblock %}
 <hr>
 <a href="/info">About</a>

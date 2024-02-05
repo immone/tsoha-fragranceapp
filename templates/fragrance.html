@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>{{fragrance[0]}} by {{fragrance[1]}} ({{fragrance[3]}})</h2>
+
+{% for info in fragrance%}
+{{ info }}"
+{% endfor %}
+
+{% endblock %}
