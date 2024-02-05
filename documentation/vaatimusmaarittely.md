@@ -2,4 +2,4 @@
 
 ## Sovelluksen tarkoitus
 
-Sovelluksen avulla on mahdollista tallentaa hajuvesiä tietokantaan sekä keskustella niistä.
+Sovelluksen avulla on mahdollista tallentaa hajuvesiä tietokantaan sekä keskustella niistä muiden käyttäjien kanssa.
