@@ -37,3 +37,7 @@ UPLOAD_PATH=static/images
 Tässä `DATABASE_URL` on viittaus  PostgreSQL-tietokantaan, joka on muotoa `postgresql:///xxx` ja `SECRET_KEY` istuntojen salaukseen tarvittava 32-bittinen avain (luo esimerkiksi Pythonin `secrets`-kirjaston avulla komennolla `secrets.token_hex(16)`)
 
 6. Käynnistä sovellus paikallisesti komennolla `flask run`
+
+## Käyttöesimerkki
+
+Kun olet käynnistänyt ohjelman paikallisesti, avaa selain ja kirjoita siihen osoite `http://127.0.0.1:5000`. Saat lisättyä tietokantaan uusia hajuvesiä ensin luomalla uuden käyttäjätunnuksen (`Log in` -> `Register here`), jonka jälkeen oikealla olevasta paneelista `Headuser panel` pääset lisäämään tietokantaan uuden hajuveden painamalla nappia `Add a new fragrance`.
