@@ -36,4 +36,10 @@ class FragranceService():
     def get_one(self, to_get_id, table_name):
         return self.fragrance_repository.get_one_by_id(to_get_id, table_name)
 
+    def add_to_collection(self, fragrance_id, u_id):
+        return self.fragrance_repository.add_to_collection(fragrance_id, u_id)
+
+    def return_statistics(self):
+        return self.fragrance_repository.compute_stats()
+
 fragrance_service = FragranceService(frag_repository)

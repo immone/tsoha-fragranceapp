@@ -3,10 +3,14 @@
 
 <h2>Recent reviews</h2>
 
-<ul>
-{% for review in reviews %}
-    {{ review[0] }} ({{review[1]}}/10)
-{% endfor %}
-</ul>
-
+<div>
+    <ul class="columns" data-columns="3">
+        {% for r in reviews %}
+            <li>
+               User <a href="/users/{{r[1]}}">{{r[0]}}</a> reviewed:
+                <a href="/fragrances/{{ r[0]}}">{{r[6]}}</a> by {{r[7]}} - {{r[3]}} out of 10
+            </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}

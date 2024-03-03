@@ -14,7 +14,6 @@ class FragranceRepository:
             "designer": "SELECT * FROM designers WHERE id=:get_id",
             "fragrance": "SELECT * FROM fragrances WHERE id=:get_id",
             "perfumer": "SELECT * FROM perfumers WHERE id=:get_id",
-            "collection": "SELECT * FROM collections WHERE collections.user_id=:param"
         }
         query = query_map[table]
         return self.db.session.execute(text(query), {"get_id": get_id}).fetchone()
@@ -35,10 +34,15 @@ class FragranceRepository:
             "reviews": """SELECT * FROM reviews
                          WHERE reviews.fragrance_id=:param
                          ORDER by reviews.sent_at""",
-            "user_reviews": """SELECT u.name, r.comment, r.rating, r.sent_at, f.name, f.designer, 
-                               f.created_in, r.id FROM reviews r, users u, fragrances f
-                               WHERE r.user_id = u.id AND f.id = r.fragrance_id ORDER by r.sent_at""",
-            "perfumers": "SELECT id, name FROM perfumers WHERE visible=1 ORDER BY name"
+            "all_reviews": "SELECT * from reviews ORDER by reviews.sent_at",
+            "user_reviews": """SELECT u.name, u.id, r.comment, r.rating, r.sent_at, f.name, f.designer, f.created_in, r.id 
+                               FROM reviews r JOIN users u on r.user_id = u.id
+                                              JOIN fragrances f on r.fragrance_id = f.id
+                               ORDER by r.sent_at""",
+            "perfumers": "SELECT id, name FROM perfumers WHERE visible=1 ORDER BY name",
+            "collection": """SELECT fragrances.name, fragrances.designer, fragrances.id FROM fragrances 
+                             JOIN collections ON fragrances.id = collections.fragrance_id
+                             WHERE collections.user_id=:param"""
         }
         query = query_map[table]
         if param:
@@ -51,11 +55,11 @@ class FragranceRepository:
         query = """INSERT INTO fragrances (creator_id, designer, name, nose, description, notes, created_in, visible)
                    VALUES (:creator, :designer, :name, :nose, :description, :notes, :year, 1) RETURNING id"""
 
-        db.session.execute(text(query), {"creator": creator, "designer": designer, "name": name,
+        val = db.session.execute(text(query), {"creator": creator, "designer": designer, "name": name,
                                    "nose": nose, "description": description,
                                    "notes": notes, "year": year})
         db.session.commit()
-        return query
+        return val
 
     def add_designer(self, name):
         query = """INSERT INTO designers (name, visible) VALUES (:name, 1)"""
@@ -72,5 +76,19 @@ class FragranceRepository:
                    VALUES (:comment, :rating, NOW(), :fragrance_id, :user_id)"""
         db.session.execute(text(query), {"comment": comment, "rating": rating, "fragrance_id": fragrance_id, "user_id": u_id})
         db.session.commit()
+
+    def add_to_collection(self, u_id, f_id):
+        query = "INSERT INTO collections (user_id, fragrance_id) VALUES (:user_id, :fragrance_id) RETURNING id"
+        val = db.session.execute(text(query), {"user_id": u_id, "fragrance_id": f_id})
+        db.session.commit()
+        return val
+
+    def compute_stats(self):
+        users = db.session.execute(text("SELECT COUNT(*) from users")).fetchone()
+        fragrances = db.session.execute(text("SELECT COUNT(*) from fragrances")).fetchone()
+        reviews = db.session.execute(text("SELECT COUNT(*) from reviews")).fetchone()
+
+        return users[0], fragrances[0], reviews[0]
+
 
 frag_repository = FragranceRepository(db)

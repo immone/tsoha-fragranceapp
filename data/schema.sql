@@ -20,6 +20,7 @@ CREATE TABLE fragrances (
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     name TEXT,
+    fragrance_id INTEGER references fragrances,
     visible INTEGER
 );
 
@@ -29,7 +30,7 @@ CREATE TABLE designers (
     visible INTEGER
 );
 
-CREATE TABLE perfumers (
+CREATE TABLE perfumers
     id SERIAL PRIMARY KEY,
     name TEXT,
     visible INTEGER
@@ -37,9 +38,7 @@ CREATE TABLE perfumers (
 
 CREATE TABLE collections (
     id SERIAL PRIMARY KEY,
-    name TEXT,
     user_id INTEGER references users,
-    favourite_id INTEGER references fragrances,
     fragrance_id INTEGER references fragrances
 );
 

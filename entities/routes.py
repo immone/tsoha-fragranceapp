@@ -6,9 +6,10 @@ from services.fragrance_service import fragrance_service
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    users, fragrances, reviews = fragrance_service.return_statistics()
+    return render_template("index.html", u=users,f=fragrances,r=reviews)
 
-@app.route("/register", methods=["get", "post"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
         return render_template("register.html")
@@ -105,7 +106,6 @@ def list_fragrances():
 def show_fragrance(fragrance_id):
     one = fragrance_service.get_one("fragrance", fragrance_id)
     reviews = fragrance_service.get_all("reviews", fragrance_id)
-    print(fragrance_id, reviews)
     return render_template("fragrance.html", fragrance=one, reviews=reviews)
 
 @app.route("/designers/<int:designer_id>")
@@ -120,22 +120,18 @@ def show_perfumer(perfumer_id):
     fragrances_by_perfumer = fragrance_service.get_all_by_name("perfumer", one[1])
     return render_template("perfumer.html", perfumer=one, fragrances_by_perfumer=fragrances_by_perfumer)
 
-@app.route("/user_profile/<int:user_id>>")
+@app.route("/users/<int:user_id>")
 def show_user_profile(user_id):
     one = user_service.get_username(user_id)
-    query = fragrance_service.get_one("collection", user_id)
-    favourite = query[0]
-    collection =
-    return render_template("user_profile.html", user=one, favourite=favourite, collection=collection)
-
-@app.route("/statistics")
-def show_statistics():
-    return render_template("statistics.html")
+    query = fragrance_service.get_all("collection", user_id)
+    return render_template("user_profile.html", user=one[0], collection=query)
 
 @app.route("/recent_reviews")
 def list_reviews():
-    all = fragrance_service.get_all("reviews")
-    return render_template("recent_reviews.html", reviews=all)
+    all = fragrance_service.get_all("user_reviews")
+    print(all)
+    most_recent = all[0:4]
+    return render_template("recent_reviews.html", reviews=most_recent)
 
 @app.route("/fragrances/<int:fragrance_id>/new_review")
 def add_review(fragrance_id):
@@ -154,4 +150,13 @@ def send_review(fragrance_id):
     else:
         return render_template("error.html", message="Failed to add a new review")
 
+@app.route("/fragrances/<int:fragrance_id>/add_to_collection")
+def add_to_collection(fragrance_id):
+    u_id = user_service.get_user_id()
+    val = fragrance_service.add_to_collection(u_id, fragrance_id)
+    if val:
+        url = f"/fragrances/{fragrance_id}"
+        return redirect(url)
+    else:
+        return render_template("error.html", message="Failed to add fragrance to collection")
 

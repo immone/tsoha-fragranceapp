@@ -18,7 +18,9 @@
 <a href="/recent_reviews">Recent reviews</a>
 
 {% if session.user_id %}
-  Logged in as: {{ session.user_name }}<a href="/user_profile"> My profile</a>. <a href="/logout">Log out</a>
+  Logged in as: {{ session.user_name }}
+  <a href="/users/{{session.user_id}}">My profile</a>
+<a href="/logout">Log out</a>
 {% else %}
   <a href="/login">Log in</a>
 {% endif %}

@@ -12,6 +12,8 @@
 <p>
 {% if session.user_id %}
     <a href="/fragrances/{{fragrance[0]}}/new_review">Add review</a>
+    <p>
+    <a href="/fragrances/{{fragrance[0]}}/add_to_collection">Add to your collection</a>
 {% else %}
     <a href="/login"> Sign in to add a review</a>
 {% endif %}
@@ -22,7 +24,7 @@ Reviews:
 <hr>
 
 {% for r in reviews %}
-     <b>Reviewed by user</b> <a href="/users/{{session.user_id}}">{{ r[0] }}
+    <b>Reviewed by user</b> <a href="/users/{{r[5]}}">{{ r[0] }} </a>
     <p>
     <b>Rating:</b> {{ r[2] }} out of  10
     <p>
