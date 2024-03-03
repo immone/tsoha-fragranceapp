@@ -1,8 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h2>User profile</h2>
+<h2>User <b>{{ user }}</b></h2>
 
-To be implemented
+<b> Favourite fragrance: </b> {{ favourite }}
+
+<hr>
+
+<b> Collection: </b>
+
+<div>
+    <ul class="columns" data-columns="3">
+        {% for fragrance in collection %}
+            <li><a href="/fragrances/{{fragrance[0]}}"> {{fragrance[3]}}: "{{ fragrance [2] }}"</a> </li>
+        {% endfor %}
+    </ul>
+</div>
 
 {% endblock %}

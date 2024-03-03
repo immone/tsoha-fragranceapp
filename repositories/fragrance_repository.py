@@ -9,31 +9,43 @@ class FragranceRepository:
         query = "SELECT name FROM fragrances WHERE id=:fragrance_id"
         return self.db.session.execute(text(query), {"fragrance_id": fragrance_id}).fetchone()
 
-    def get_one_fragrance(self, fragrance_id):
-        query = "SELECT * FROM fragrances WHERE id=:fragrance_id"
-        return self.db.session.execute(text(query), {"fragrance_id": fragrance_id}).fetchone()
+    def get_one_by_id(self, table, get_id):
+        query_map = {
+            "designer": "SELECT * FROM designers WHERE id=:get_id",
+            "fragrance": "SELECT * FROM fragrances WHERE id=:get_id",
+            "perfumer": "SELECT * FROM perfumers WHERE id=:get_id",
+            "collection": "SELECT * FROM collections WHERE collections.user_id=:param"
+        }
+        query = query_map[table]
+        return self.db.session.execute(text(query), {"get_id": get_id}).fetchone()
 
-    def get_all_designers(self):
-        query = "SELECT id, name FROM designers WHERE visible=1 ORDER BY name"
-        return self.db.session.execute(text(query)).fetchall()
+    def get_all_by_name(self, table, name):
+        query_map = {
+            "designer": "SELECT * FROM fragrances WHERE designer=:name",
+            "perfumer": "SELECT * FROM fragrances WHERE nose=:name"
+        }
+        query = query_map[table]
+        return self.db.session.execute(text(query), {"name": name}).fetchall()
 
-    def get_all_fragrances(self):
-        query = "SELECT id, name, designer, created_in FROM fragrances WHERE visible=1 ORDER BY name"
-        return self.db.session.execute(text(query)).fetchall()
+    def get_all(self, table, param=None):
+        query_map = {
+            "designers": "SELECT id, name FROM designers WHERE visible=1 ORDER BY name",
+            "fragrances": "SELECT id, name, designer, created_in FROM fragrances WHERE visible=1 ORDER BY name",
+            "groups": "SELECT id, name FROM groups WHERE visible=1 ORDER BY name",
+            "reviews": """SELECT * FROM reviews
+                         WHERE reviews.fragrance_id=:param
+                         ORDER by reviews.sent_at""",
+            "user_reviews": """SELECT u.name, r.comment, r.rating, r.sent_at, f.name, f.designer, 
+                               f.created_in, r.id FROM reviews r, users u, fragrances f
+                               WHERE r.user_id = u.id AND f.id = r.fragrance_id ORDER by r.sent_at""",
+            "perfumers": "SELECT id, name FROM perfumers WHERE visible=1 ORDER BY name"
+        }
+        query = query_map[table]
+        if param:
+            return self.db.session.execute(text(query), {"param": param }).fetchall()
+        else:
+            return self.db.session.execute(text(query)).fetchall()
 
-    def get_all_groups(self):
-        query = "SELECT id, name FROM groups WHERE visible=1 ORDER BY name"
-        return self.db.session.execute(text(query)).fetchall()
-
-    def get_all_perfumers(self):
-        query = "SELECT id, name FROM perfumers WHERE visible=1 ORDER BY name"
-        return self.db.session.execute(text(query)).fetchall()
-
-    def get_all_reviews(self):
-        query = """SELECT u.name, r.comment, r.review, r.sent_at, f.name, f.designer,
-                          f.created_in, r.id FROM reviews r, users u, fragrances f
-                   WHERE r.user_id = u.id AND f.id = r.fragrance_id ORDER by r.sent_at"""
-        return self.db.session.execute(text(query)).fetchall()
 
     def add_fragrance(self, creator, name, designer, nose, description, notes, year):
         query = """INSERT INTO fragrances (creator_id, designer, name, nose, description, notes, created_in, visible)
@@ -55,10 +67,10 @@ class FragranceRepository:
         db.session.execute(text(query), {"name": name})
         db.session.commit()
 
-    def add_review(self, text, review, fragrance_id, user_id):
-        query = """INSERT INTO reviews (comment, review, sent_at, fragrance_id, user_id) 
-                   VALUES (:text, :review, NOW(), :fragrance_id, :user_id)"""
-        db.session.execute(text(query), {"text": text, "review": review, "fragrance_id": fragrance_id, "user_id": user_id})
+    def add_review(self, comment, rating, fragrance_id, u_id):
+        query = """INSERT INTO reviews (comment, rating, sent_at, fragrance_id, user_id) 
+                   VALUES (:comment, :rating, NOW(), :fragrance_id, :user_id)"""
+        db.session.execute(text(query), {"comment": comment, "rating": rating, "fragrance_id": fragrance_id, "user_id": u_id})
         db.session.commit()
 
 frag_repository = FragranceRepository(db)

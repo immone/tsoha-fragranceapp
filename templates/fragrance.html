@@ -1,10 +1,36 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h2>{{fragrance[0]}} by {{fragrance[1]}} ({{fragrance[3]}})</h2>
+<h2>{{fragrance[2]}} by {{fragrance[3]}} ({{fragrance[7]}})</h2>
+
+<p> Perfumer: {{ fragrance[4] }} </p>
 
 {% for info in fragrance%}
-{{ info }}"
+    {{ info }}"
 {% endfor %}
+
+<p>
+{% if session.user_id %}
+    <a href="/fragrances/{{fragrance[0]}}/new_review">Add review</a>
+{% else %}
+    <a href="/login"> Sign in to add a review</a>
+{% endif %}
+</p>
+
+
+Reviews:
+<hr>
+
+{% for r in reviews %}
+     <b>Reviewed by user</b> <a href="/users/{{session.user_id}}">{{ r[0] }}
+    <p>
+    <b>Rating:</b> {{ r[2] }} out of  10
+    <p>
+    {{ r[1] }}
+    <p>
+    <i>Sent at: </i>{{ r[3].strftime("%Y-%m-%d %H:%M:%S") }}
+{% endfor %}
+
+
 
 {% endblock %}

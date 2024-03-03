@@ -9,8 +9,8 @@
 <div class="dropdown">
   <button class="dropbtn">Browse</button>
   <div class="dropdown-content">
-    <a href="/browse/fragrances">Fragrances</a>
     <a href="/browse/designers">Designers</a>
+    <a href="/browse/fragrances">Fragrances</a>
     <a href="/browse/groups">Groups</a>
     <a href="/browse/perfumers">Perfumers</a>
   </div>
@@ -24,9 +24,8 @@
 {% endif %}
 
 {% if session.user_role == 2 %}
-  <a href="/admin">Headuser panel</a>
+  <a href="/admin">Admin panel</a>
 {% endif %}
-
 
 <hr>
   {% block content %}{% endblock %}

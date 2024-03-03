@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Perfumer: {{ perfumer[1] }}</h2>
+
+All fragrances by {{ perfumer[1] }}
+<div>
+    <ul class="columns" data-columns="3">
+        {% for fragrance in fragrances_by_perfumer%}
+            <li><a href="/fragrances/{{fragrance[0]}}"> {{ fragrance[2]}} by {{ fragrance[3] }}"</a> </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+

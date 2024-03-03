@@ -19,26 +19,21 @@ class FragranceService():
             perfumers = [perfumer[1] for perfumer in perfumers]
         if not perfumers or nose not in perfumers:
             self.fragrance_repository.add_perfumer(nose)
-
-        print(designers, perfumers)
         return fragrance_id
+
+    def post_new_review(self, text, rating, fragrance_id, user_id):
+        return self.fragrance_repository.add_review(text, rating, fragrance_id, user_id)
+
+    def get_all_by_name(self, table, name):
+        return self.fragrance_repository.get_all_by_name(table, name)
 
     def get_name(self, to_get_id):
         return self.fragrance_repository.fragrance_name(to_get_id)
 
-    def get_all(self, to_get):
-        if to_get == "groups":
-            return self.fragrance_repository.get_all_groups()
-        elif to_get == "fragrances":
-            return self.fragrance_repository.get_all_fragrances()
-        elif to_get == "designers":
-            return self.fragrance_repository.get_all_designers()
-        elif to_get == "perfumers":
-            return self.fragrance_repository.get_all_perfumers()
-        elif to_get == "reviews":
-            return self.fragrance_repository.get_all_reviews()
+    def get_all(self, table_name, param=None):
+        return self.fragrance_repository.get_all(table_name, param)
 
-    def get_one(self, to_get_id):
-        return self.fragrance_repository.get_one_fragrance(to_get_id)
+    def get_one(self, to_get_id, table_name):
+        return self.fragrance_repository.get_one_by_id(to_get_id, table_name)
 
-fragrance_repository = FragranceService(frag_repository)
+fragrance_service = FragranceService(frag_repository)

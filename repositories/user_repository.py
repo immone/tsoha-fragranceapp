@@ -16,7 +16,6 @@ class UserRepository:
             return False
         return self.login(name, password)
 
-
     def login(self, name, password):
         query = "SELECT password, id, role FROM users WHERE name=:name"
         response = db.session.execute(text(query), {"name":name})
@@ -29,7 +28,6 @@ class UserRepository:
         session["user_name"] = name
         session["user_role"] = user[2]
         session["csrf_token"] = os.urandom(16).hex()
-
         return True
 
     def get_user(self):

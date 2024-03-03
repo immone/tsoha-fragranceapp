@@ -46,7 +46,7 @@ CREATE TABLE collections (
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
     comment TEXT,
-    review INTEGER,
+    rating INTEGER,
     sent_at TIMESTAMP,
     fragrance_id INTEGER references fragrances,
     user_id INTEGER references users

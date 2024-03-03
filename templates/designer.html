@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>{{ designer[0] }}</h2>
+
+<div>
+    <ul class="columns" data-columns="3">
+        {% for fragrance in fragrances_by_designer %}
+            <li><a href="/fragrances/{{fragrance[0]}}"> {{ fragrance[1] }}"</a> </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+

@@ -3,10 +3,14 @@
 
 <h2>Perfumers</h2>
 
-<ul>
-{% for perfumer in perfumers %}
-    {{ perfumer }}"
-{% endfor %}
-</ul>
-
+<div>
+    <ul class="columns" data-columns="3">
+        {% for perfumer in perfumers %}
+            <li><a href="/perfumers/{{perfumer[0]}}"> {{ perfumer[1] }}"</a> </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}
+
+
+
