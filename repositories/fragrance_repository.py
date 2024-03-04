@@ -25,8 +25,8 @@ class FragranceRepository:
     def get_all_by_name(self, table, name):
         """ Returns one element from table specified by the parameter and name. """
         query_map = {
-            "designer": "SELECT * FROM fragrances WHERE designer=:name",
-            "perfumer": "SELECT * FROM fragrances WHERE nose=:name"
+            "designer": "SELECT * FROM fragrances WHERE designer=:name AND fragrances.visible=true",
+            "perfumer": "SELECT * FROM fragrances WHERE nose=:name AND fragrances.visible=true"
         }
         query = query_map[table]
         return self.db.session.execute(text(query), {"name": name}).fetchall()
@@ -40,7 +40,8 @@ class FragranceRepository:
             "groups":             "SELECT id, name FROM groups WHERE visible=true ORDER BY name",
 
             "reviews":            """SELECT reviews.comment, reviews.rating, users.name, reviews.sent_at, reviews.user_id, reviews.id
-                                     FROM reviews JOIN users on reviews.user_id=users.id
+                                     FROM reviews 
+                                     JOIN users on reviews.user_id=users.id
                                      WHERE reviews.fragrance_id=:param and reviews.visible=true
                                      ORDER by reviews.sent_at""",
 
@@ -50,7 +51,7 @@ class FragranceRepository:
                                      FROM reviews r 
                                      JOIN users u on r.user_id = u.id
                                      JOIN fragrances f on r.fragrance_id = f.id
-                                     WHERE r.visible=true
+                                     WHERE r.visible=true AND f.visible=true
                                      ORDER by r.sent_at""",
 
             "perfumers":         "SELECT id, name FROM perfumers WHERE visible=true ORDER BY name",
@@ -130,9 +131,10 @@ class FragranceRepository:
         query = """SELECT fragrances.name, fragrances.id, AVG(reviews.rating)::numeric(10,2) 
                    FROM reviews
                    JOIN fragrances on reviews.fragrance_id=fragrances.id
-                   WHERE reviews.visible=true
+                   WHERE reviews.visible=true AND fragrances.visible=true
                    GROUP BY fragrances.name, fragrances.id
                    ORDER BY AVG(reviews.rating) DESC"""
+
         avg = db.session.execute(text(query)).fetchall()
         return avg
 
