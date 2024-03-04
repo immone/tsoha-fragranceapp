@@ -11,7 +11,12 @@ Sovelluksen ominaisuuksia ovat:
 * Käyttäjä voi tutkia suosituimpia hajuvesiä tilastoista.
 * Ylläpitäjä voi lisätä tai poistaa hajuveden.
 * Ylläpitäjä voi poistaa tarvittaessa käyttäjän arvion.
+
+Jatkokehitysideoita:
 * Ylläpitäjä voi luokitella hajuvesiä eri joukkoihin niiden ominaisuuksien mukaan.
+* Ylläpitäjä voi lisätä hajuvesia lisätessä mukaan kuvan.
+* Ylläpitäjä voi muokata tietokannassa olevia tietoja joustavammin (esimerkiksi hajuvesien tietoja).
+* Käyttäjä voi muokata profiiliaan joustavammin (lisätä itselleen profiilikuvan sekä suosikkihajuveden). 
 
 
 ## Dokumentaatio
@@ -40,4 +45,10 @@ Tässä `DATABASE_URL` on viittaus  PostgreSQL-tietokantaan, joka on muotoa `pos
 
 ## Käyttöesimerkki
 
-Kun olet käynnistänyt ohjelman paikallisesti, avaa selain ja kirjoita siihen osoite `http://127.0.0.1:5000`. Luo ensin uusi käyttäjätunnus (`Log in` -> `Register here`) ja rekisteröidy ylläpitäjänä, jonka jälkeen pääset lisäämään tietokantaa uuden hajuveden oikealla olevasta paneelista `Headuser panel` painamalla nappia `Add a new fragrance`.
+Kun olet käynnistänyt ohjelman paikallisesti, avaa selain ja kirjoita siihen osoite `http://127.0.0.1:5000`. 
+
+Luo ensin uusi käyttäjätunnus (`Log in` -> `Register here`) ja rekisteröidy ylläpitäjänä (valitse `User role: admin`, jonka jälkeen pääset lisäämään tietokantaa uuden hajuveden oikealla olevasta ylläpitäjän paneelista `Admin panel` painamalla nappia `Add a new fragrance`.
+
+Täytä hajuveden tiedot (hajuvesien kuvien lisääminen tietokantaan ei ole vielä implementoitu). Tietojen lisäämisen jälkeen lisää hajuvesi tietokantaan painamalla `Submit`.
+
+Kun hajuvesi on lisätty tietokantaan, voit hakea sen valitsemalla yläpaneelista `Browse` -> `Fragrances`. Hajuveden sivulla voit joko lisätä siihen arvostelun (`Add review`) tai lisätä sen omaan kokoelmaasi `Add to your collection`. Voit tutkia omassa kokoelmassasi olevia hajuvesiä valitsemalla paneelista kohdan `My profile`.
