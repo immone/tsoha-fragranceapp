@@ -42,4 +42,13 @@ class FragranceService():
     def return_statistics(self):
         return self.fragrance_repository.compute_stats()
 
+    def return_average(self):
+        return self.fragrance_repository.compute_average()
+
+    def return_average_by_id(self, f_id):
+        return self.fragrance_repository.compute_average_by_id(f_id)
+
+    def set_visibility(self, table, item_id, visibility=False):
+        self.fragrance_repository.set_visibility(table, item_id, visibility)
+
 fragrance_service = FragranceService(frag_repository)

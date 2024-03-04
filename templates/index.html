@@ -9,4 +9,15 @@ fragrances.
 <hr>
 A total of {{u}} registered users, {{r}} reviews and {{f}} fragrances in the database.
 
+<p>
+5 most popular fragrances in the database:
+<div>
+    <ul class="columns" data-columns="3">
+        {% for avg in a %}
+            <li><a href="/fragrances/{{avg[1]}}"> {{avg[0]}}</a>: {{avg[2]}} </li>
+        {% endfor %}
+    </ul>
+</div>
+
+
 {% endblock %}

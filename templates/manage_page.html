@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Manage</h2>
+
+<p>
+<b> Manage groups:</b>
+To be implemented
+
+<p>
+<b> Unhide fragrances:</b>
+<div>
+    <ul class="columns" data-columns="3">
+        {% for h in hidden %}
+            <li><a href="/fragrances/{{h[0]}}"> {{ h[1] }} by {{h[2]}} </a> </li>
+        {% if session.user_role == 2 %}
+            <form action="/fragrances/{{h[0]}}/show_fragrance" method="POST">
+            <input type="submit" value="Unhide fragrance">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            </form>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+

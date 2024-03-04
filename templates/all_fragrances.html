@@ -6,7 +6,13 @@
 <div>
     <ul class="columns" data-columns="3">
         {% for fragrance in fragrances %}
-            <li><a href="/fragrances/{{fragrance[0]}}"> {{fragrance[3]}}: "{{ fragrance [2] }}"</a> </li>
+            <li><a href="/fragrances/{{fragrance[0]}}"> {{ fragrance [1] }} by {{fragrance[2]}} </a> </li>
+        {% if session.user_role == 2 %}
+            <form action="/fragrances/{{fragrance[0]}}/hide_fragrance" method="POST">
+            <input type="submit" value="Hide fragrance">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">¨
+            </form>
+        {% endif %}
         {% endfor %}
     </ul>
 </div>

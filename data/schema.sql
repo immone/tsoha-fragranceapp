@@ -14,26 +14,26 @@ CREATE TABLE fragrances (
     description TEXT,
     notes TEXT,
     created_in INTEGER,
-    visible INTEGER
+    visible BOOLEAN
 );
 
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     name TEXT,
     fragrance_id INTEGER references fragrances,
-    visible INTEGER
+    visible BOOLEAN
 );
 
 CREATE TABLE designers (
     id SERIAL PRIMARY KEY,
     name TEXT,
-    visible INTEGER
+    visible BOOLEAN
 );
 
-CREATE TABLE perfumers
+CREATE TABLE perfumers (
     id SERIAL PRIMARY KEY,
     name TEXT,
-    visible INTEGER
+    visible BOOLEAN
 );
 
 CREATE TABLE collections (
@@ -48,5 +48,6 @@ CREATE TABLE reviews (
     rating INTEGER,
     sent_at TIMESTAMP,
     fragrance_id INTEGER references fragrances,
-    user_id INTEGER references users
+    user_id INTEGER references users,
+    visible BOOLEAN
 );

@@ -7,7 +7,8 @@ from services.fragrance_service import fragrance_service
 @app.route("/")
 def index():
     users, fragrances, reviews = fragrance_service.return_statistics()
-    return render_template("index.html", u=users,f=fragrances,r=reviews)
+    avg = fragrance_service.return_average()
+    return render_template("index.html", u=users,f=fragrances,r=reviews, a=avg[0:4])
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -68,10 +69,10 @@ def add():
         year = request.form["year"]
         nose = request.form["perfumer"]
         description = request.form["description"]
+        if not description:
+            description = "-"
         notes = request.form["headnotes"] + ";" + request.form["middlenotes"] + ";" + request.form["bottomnotes"]
-
         out = fragrance_service.post_new_fragrance(user_id, name, designer, nose, description, notes, year)
-        #img_service.post(out)
         return redirect("/")
 
 @app.route('/info')
@@ -106,7 +107,11 @@ def list_fragrances():
 def show_fragrance(fragrance_id):
     one = fragrance_service.get_one("fragrance", fragrance_id)
     reviews = fragrance_service.get_all("reviews", fragrance_id)
-    return render_template("fragrance.html", fragrance=one, reviews=reviews)
+    print(reviews)
+    avg = fragrance_service.return_average_by_id(fragrance_id)
+    if avg:
+        avg = avg[0]
+    return render_template("fragrance.html", fragrance=one, reviews=reviews, avg=avg)
 
 @app.route("/designers/<int:designer_id>")
 def show_designer(designer_id):
@@ -129,7 +134,6 @@ def show_user_profile(user_id):
 @app.route("/recent_reviews")
 def list_reviews():
     all = fragrance_service.get_all("user_reviews")
-    print(all)
     most_recent = all[0:4]
     return render_template("recent_reviews.html", reviews=most_recent)
 
@@ -140,6 +144,7 @@ def add_review(fragrance_id):
 
 @app.route("/send/<int:fragrance_id>", methods=["POST"])
 def send_review(fragrance_id):
+    user_service.check_csrf()
     rating = request.form["rating"]
     comment = request.form["comment"]
     u_id = user_service.get_user_id()
@@ -150,8 +155,9 @@ def send_review(fragrance_id):
     else:
         return render_template("error.html", message="Failed to add a new review")
 
-@app.route("/fragrances/<int:fragrance_id>/add_to_collection")
+@app.route("/fragrances/<int:fragrance_id>/add_to_collection", methods=["POST"])
 def add_to_collection(fragrance_id):
+    user_service.check_csrf()
     u_id = user_service.get_user_id()
     val = fragrance_service.add_to_collection(u_id, fragrance_id)
     if val:
@@ -160,3 +166,28 @@ def add_to_collection(fragrance_id):
     else:
         return render_template("error.html", message="Failed to add fragrance to collection")
 
+@app.route("/fragrances/<int:fragrance_id>/<int:review_id>/hide_review", methods=["POST"])
+def hide_review(fragrance_id, review_id):
+    user_service.check_csrf()
+    fragrance_service.set_visibility("review", review_id, False)
+    url = f"/fragrances/{fragrance_id}"
+    return redirect(url)
+
+@app.route("/fragrances/<int:fragrance_id>/hide_fragrance", methods=["POST"])
+def hide_fragrance(fragrance_id):
+    user_service.check_csrf()
+    fragrance_service.set_visibility("fragrance", fragrance_id, False)
+    url = f"/browse/fragrances"
+    return redirect(url)
+
+@app.route("/admin/manage")
+def manage_fragrances():
+    hidden = fragrance_service.get_all("fragrances_hidden")
+    return render_template("manage_page.html", hidden=hidden)
+
+@app.route("/fragrances/<int:fragrance_id>/show_fragrance", methods=["POST"])
+def unhide_fragrance(fragrance_id):
+    user_service.check_csrf()
+    fragrance_service.set_visibility("fragrance", fragrance_id, True)
+    url = f"/admin/manage"
+    return redirect(url)

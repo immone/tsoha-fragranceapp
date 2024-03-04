@@ -3,34 +3,50 @@
 
 <h2>{{fragrance[2]}} by {{fragrance[3]}} ({{fragrance[7]}})</h2>
 
-<p> Perfumer: {{ fragrance[4] }} </p>
+{% if avg %}
+<p> <b> Rating: </b> {{ avg[0] }}
+{% else %}
+<p> <b> Rating: </b> No reviews yet
+{% endif %}
 
-{% for info in fragrance%}
-    {{ info }}"
-{% endfor %}
+<p> <b>Perfumer:</b> {{ fragrance[4] }}
+
+<p> <b>Description:</b> {{ fragrance[5] }}
+
+<p>
+
 
 <p>
 {% if session.user_id %}
     <a href="/fragrances/{{fragrance[0]}}/new_review">Add review</a>
     <p>
-    <a href="/fragrances/{{fragrance[0]}}/add_to_collection">Add to your collection</a>
+    <form action="/fragrances/{{fragrance[0]}}/add_to_collection" method="POST">
+    <input type="submit" value="Add to your collection">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    </form>
 {% else %}
     <a href="/login"> Sign in to add a review</a>
 {% endif %}
-</p>
 
+<p>
 
 Reviews:
 <hr>
 
 {% for r in reviews %}
-    <b>Reviewed by user</b> <a href="/users/{{r[5]}}">{{ r[0] }} </a>
+    <b>Reviewed by user</b> <a href="/users/{{r[4]}}">{{ r[2] }} </a>
     <p>
-    <b>Rating:</b> {{ r[2] }} out of  10
+    <b>Rating:</b> {{ r[1] }} out of 10
     <p>
-    {{ r[1] }}
+    {{ r[2] }}
     <p>
     <i>Sent at: </i>{{ r[3].strftime("%Y-%m-%d %H:%M:%S") }}
+        {% if session.user_role == 2 %}
+        <form action="/fragrances/{{fragrance[0]}}/{{r[5]}}/hide_review" method="POST">
+        <input type="submit" value="Hide review">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
+    {% endif %}
 {% endfor %}
 
 

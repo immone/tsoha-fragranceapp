@@ -5,7 +5,7 @@
 <title>fragranceapp - {% block title %}{% endblock %}</title>
 <h1>fragranceapp</h1>
 
-<a href="/">Front page</a>
+<button class="dropbtn"><a href="/">Front page</a></button>
 <div class="dropdown">
   <button class="dropbtn">Browse</button>
   <div class="dropdown-content">
@@ -15,18 +15,19 @@
     <a href="/browse/perfumers">Perfumers</a>
   </div>
 </div>
-<a href="/recent_reviews">Recent reviews</a>
+<button class="dropbtn"><a href="/recent_reviews">Recent reviews</a></button>
+
 
 {% if session.user_id %}
-  Logged in as: {{ session.user_name }}
-  <a href="/users/{{session.user_id}}">My profile</a>
-<a href="/logout">Log out</a>
+  <b>Logged in as:</b> {{ session.user_name }}
+  <button class="dropbtn"><a href="/users/{{session.user_id}}">My profile</a></button>
+  <button class="dropbtn"><a href="/logout">Log out</a></button>
 {% else %}
-  <a href="/login">Log in</a>
+  <button class="dropbtn"><a href="/login">Log in</a>/button>
 {% endif %}
 
 {% if session.user_role == 2 %}
-  <a href="/admin">Admin panel</a>
+ <button class="dropbtn"> <a href="/admin">Admin panel</a></button>
 {% endif %}
 
 <hr>
