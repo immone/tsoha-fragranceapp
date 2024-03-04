@@ -4,13 +4,19 @@ from flask import abort, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.sql import text
 
+
 class UserRepository:
+    """ Class responsible for user-related commits to the database
+        as well as handling session related calls.
+    """
+
     def register(self, name, password, role):
         hash_value = generate_password_hash(password)
         try:
             sql = """INSERT INTO users (name, password, role)
                          VALUES (:name, :password, :role)"""
-            db.session.execute(text(sql), {"name": name, "password": hash_value, "role": role})
+            db.session.execute(
+                text(sql), {"name": name, "password": hash_value, "role": role})
             db.session.commit()
         except:
             return False
@@ -18,7 +24,7 @@ class UserRepository:
 
     def login(self, name, password):
         query = "SELECT password, id, role FROM users WHERE name=:name"
-        response = db.session.execute(text(query), {"name":name})
+        response = db.session.execute(text(query), {"name": name})
         user = response.fetchone()
 
         if not user or not check_password_hash(user[0], password):
@@ -45,5 +51,6 @@ class UserRepository:
     def check_csrf(self):
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
+
 
 user_repository = UserRepository()

@@ -1,14 +1,18 @@
-from app import app
 from flask import redirect, render_template, request
-from services.user_service import user_service
-from services.image_service import img_service
 from services.fragrance_service import fragrance_service
+from services.user_service import user_service
+from app import app
+
+""" Routes responsible for index and user related templates. """
+
 
 @app.route("/")
 def index():
+    """ Front page. """
     users, fragrances, reviews = fragrance_service.return_statistics()
     avg = fragrance_service.return_average()
-    return render_template("index.html", u=users,f=fragrances,r=reviews, a=avg[0:4])
+    return render_template("index.html", u=users, f=fragrances, r=reviews, a=avg[0:4])
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -18,7 +22,8 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         if len(username) < 1 or len(username) > 20:
-            return render_template("error.html", message="Your username should consists of 1-20 characters")
+            return render_template("error.html",
+                                   message="Your username should consists of 1-20 characters")
 
         password1 = request.form["password1"]
         password2 = request.form["password2"]
@@ -35,6 +40,7 @@ def register():
             return render_template("error.html", message="Failed to register")
         return redirect("/")
 
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
@@ -48,13 +54,16 @@ def login():
             return render_template("error.html", message="Wrong username or password")
         return redirect("/")
 
+
 @app.route("/logout")
 def logout():
     user_service.logout_user()
     return redirect("/")
 
+
 @app.route('/add', methods=['GET', 'POST'])
 def add():
+    """ Add fragrance to the database. """
     user_service.check_role(2)
 
     if request.method == "GET":
@@ -71,59 +80,22 @@ def add():
         description = request.form["description"]
         if not description:
             description = "-"
-        notes = request.form["headnotes"] + ";" + request.form["middlenotes"] + ";" + request.form["bottomnotes"]
-        out = fragrance_service.post_new_fragrance(user_id, name, designer, nose, description, notes, year)
+        notes = request.form["headnotes"] + ";" + \
+            request.form["middlenotes"] + ";" + request.form["bottomnotes"]
+        fragrance_service.post_new_fragrance(
+            user_id, name, designer, nose, description, notes, year)
         return redirect("/")
+
 
 @app.route('/info')
 def about():
     return render_template("info.html")
 
+
 @app.route('/admin')
 def admin():
     return render_template("admin.html")
 
-@app.route("/browse/perfumers")
-def list_perfumers():
-    all = fragrance_service.get_all("perfumers")
-    return render_template("all_perfumers.html", perfumers=all)
-
-@app.route("/browse/groups")
-def list_groups():
-    all = fragrance_service.get_all("groups")
-    return render_template("all_groups.html", groups=all)
-
-@app.route("/browse/designers")
-def list_designers():
-    all = fragrance_service.get_all("designers")
-    return render_template("all_designers.html", designers=all)
-
-@app.route("/browse/fragrances")
-def list_fragrances():
-    all = fragrance_service.get_all("fragrances")
-    return render_template("all_fragrances.html", fragrances=all)
-
-@app.route("/fragrances/<int:fragrance_id>")
-def show_fragrance(fragrance_id):
-    one = fragrance_service.get_one("fragrance", fragrance_id)
-    reviews = fragrance_service.get_all("reviews", fragrance_id)
-    print(reviews)
-    avg = fragrance_service.return_average_by_id(fragrance_id)
-    if avg:
-        avg = avg[0]
-    return render_template("fragrance.html", fragrance=one, reviews=reviews, avg=avg)
-
-@app.route("/designers/<int:designer_id>")
-def show_designer(designer_id):
-    one = fragrance_service.get_one("designer", designer_id)
-    fragrances_by_designer = fragrance_service.get_all_by_name("designer", one[1])
-    return render_template("designer.html", designer=one, fragrances_by_designer=fragrances_by_designer)
-
-@app.route("/perfumers/<int:perfumer_id>")
-def show_perfumer(perfumer_id):
-    one = fragrance_service.get_one("perfumer", perfumer_id)
-    fragrances_by_perfumer = fragrance_service.get_all_by_name("perfumer", one[1])
-    return render_template("perfumer.html", perfumer=one, fragrances_by_perfumer=fragrances_by_perfumer)
 
 @app.route("/users/<int:user_id>")
 def show_user_profile(user_id):
@@ -131,16 +103,22 @@ def show_user_profile(user_id):
     query = fragrance_service.get_all("collection", user_id)
     return render_template("user_profile.html", user=one[0], collection=query)
 
+
+""" Routes responsible for reviews. """
+
+
+@app.route("/fragrances/<int:fragrance_id>/new_review")
+def add_review(fragrance_id):
+    one = fragrance_service.get_one("fragrance", fragrance_id)
+    return render_template("review.html", fragrance=one)
+
+
 @app.route("/recent_reviews")
 def list_reviews():
     all = fragrance_service.get_all("user_reviews")
     most_recent = all[0:4]
     return render_template("recent_reviews.html", reviews=most_recent)
 
-@app.route("/fragrances/<int:fragrance_id>/new_review")
-def add_review(fragrance_id):
-    one = fragrance_service.get_one("fragrance", fragrance_id)
-    return render_template("review.html", fragrance=one)
 
 @app.route("/send/<int:fragrance_id>", methods=["POST"])
 def send_review(fragrance_id):
@@ -149,11 +127,74 @@ def send_review(fragrance_id):
     comment = request.form["comment"]
     u_id = user_service.get_user_id()
     if u_id != 0:
-        fragrance_service.post_new_review(comment, rating, fragrance_id, int(u_id))
+        fragrance_service.post_new_review(
+            comment, rating, fragrance_id, int(u_id))
         url = f"/fragrances/{fragrance_id}"
         return redirect(url)
     else:
         return render_template("error.html", message="Failed to add a new review")
+
+
+@app.route("/fragrances/<int:fragrance_id>/<int:review_id>/hide_review", methods=["POST"])
+def hide_review(fragrance_id, review_id):
+    user_service.check_csrf()
+    fragrance_service.set_visibility("review", review_id, False)
+    url = f"/fragrances/{fragrance_id}"
+    return redirect(url)
+
+
+""" Routes responsible for listing items in the database. """
+
+
+@app.route("/browse/perfumers")
+def list_perfumers():
+    all = fragrance_service.get_all("perfumers")
+    return render_template("all_perfumers.html", perfumers=all)
+
+
+@app.route("/browse/groups")
+def list_groups():
+    all = fragrance_service.get_all("groups")
+    return render_template("all_groups.html", groups=all)
+
+
+@app.route("/browse/designers")
+def list_designers():
+    all = fragrance_service.get_all("designers")
+    return render_template("all_designers.html", designers=all)
+
+
+@app.route("/browse/fragrances")
+def list_fragrances():
+    all = fragrance_service.get_all("fragrances")
+    return render_template("all_fragrances.html", fragrances=all)
+
+
+@app.route("/fragrances/<int:fragrance_id>")
+def show_fragrance(fragrance_id):
+    one = fragrance_service.get_one("fragrance", fragrance_id)
+    reviews = fragrance_service.get_all("reviews", fragrance_id)
+    avg = fragrance_service.return_average_by_id(fragrance_id)
+    if avg:
+        avg = avg[0]
+    return render_template("fragrance.html", fragrance=one, reviews=reviews, avg=avg)
+
+
+@app.route("/designers/<int:designer_id>")
+def show_designer(designer_id):
+    one = fragrance_service.get_one("designer", designer_id)
+    fragrances_by_designer = fragrance_service.get_all_by_name(
+        "designer", one[1])
+    return render_template("designer.html", designer=one, fragrances_by_designer=fragrances_by_designer)
+
+
+@app.route("/perfumers/<int:perfumer_id>")
+def show_perfumer(perfumer_id):
+    one = fragrance_service.get_one("perfumer", perfumer_id)
+    fragrances_by_perfumer = fragrance_service.get_all_by_name(
+        "perfumer", one[1])
+    return render_template("perfumer.html", perfumer=one, fragrances_by_perfumer=fragrances_by_perfumer)
+
 
 @app.route("/fragrances/<int:fragrance_id>/add_to_collection", methods=["POST"])
 def add_to_collection(fragrance_id):
@@ -166,28 +207,27 @@ def add_to_collection(fragrance_id):
     else:
         return render_template("error.html", message="Failed to add fragrance to collection")
 
-@app.route("/fragrances/<int:fragrance_id>/<int:review_id>/hide_review", methods=["POST"])
-def hide_review(fragrance_id, review_id):
-    user_service.check_csrf()
-    fragrance_service.set_visibility("review", review_id, False)
-    url = f"/fragrances/{fragrance_id}"
-    return redirect(url)
 
 @app.route("/fragrances/<int:fragrance_id>/hide_fragrance", methods=["POST"])
 def hide_fragrance(fragrance_id):
+    """ Hides fragrance. """
     user_service.check_csrf()
     fragrance_service.set_visibility("fragrance", fragrance_id, False)
-    url = f"/browse/fragrances"
+    url = "/browse/fragrances"
     return redirect(url)
+
 
 @app.route("/admin/manage")
 def manage_fragrances():
+    """ Admin page. """
     hidden = fragrance_service.get_all("fragrances_hidden")
     return render_template("manage_page.html", hidden=hidden)
 
+
 @app.route("/fragrances/<int:fragrance_id>/show_fragrance", methods=["POST"])
 def unhide_fragrance(fragrance_id):
+    """ Shows a fragrance that has been hidden. """
     user_service.check_csrf()
     fragrance_service.set_visibility("fragrance", fragrance_id, True)
-    url = f"/admin/manage"
+    url = "/admin/manage"
     return redirect(url)

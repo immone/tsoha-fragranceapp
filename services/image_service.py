@@ -6,16 +6,19 @@ from werkzeug.utils import secure_filename
 
 # Inspired by https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
 
+
 class ImageService:
-    def validate_image(stream):
+    """ Responsible for uploading and adding images to the database. """
+
+    def validate_image(self, stream):
         header = stream.read(512)
         stream.seek(0)
-        format = imghdr.what(None, header)
-        if not format:
+        format_f = imghdr.what(None, header)
+        if not format_f:
             return None
-        return '.' + (format if format != 'jpeg' else 'jpg')
+        return '.' + (format_f if format_f != 'jpeg' else 'jpg')
 
-    def post(self, id):
+    def post(self, p_id):
         img = request.files["file"]
         filename = secure_filename(img.name)
         if filename != '':
@@ -23,7 +26,8 @@ class ImageService:
             if file_ext not in app.config['UPLOAD_EXTENSIONS'] or \
                     file_ext != self.validate_image(img.stream):
                 return None
-            img.save(os.path.join(app.config['UPLOAD_PATH'], str(id) + file_ext))
+            img.save(os.path.join(
+                app.config['UPLOAD_PATH'], str(p_id) + file_ext))
         return True
 
     def get(self, filename):

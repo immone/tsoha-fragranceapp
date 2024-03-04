@@ -1,8 +1,11 @@
+from sqlalchemy.sql import text
 from repositories.user_repository import user_repository
 from entities.db import db
-from sqlalchemy.sql import text
+
 
 class UserService:
+    """ Responsible for communication between the database and the the session. """
+
     def __init__(self, user_repository):
         self.user_repository = user_repository
         self.db = db
@@ -28,5 +31,6 @@ class UserService:
     def get_username(self, u_id):
         query = "SELECT name FROM users WHERE id=:id"
         return self.db.session.execute(text(query), {"id": u_id}).fetchone()
+
 
 user_service = UserService(user_repository)

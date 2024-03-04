@@ -1,11 +1,15 @@
 from repositories.fragrance_repository import frag_repository
 
+
 class FragranceService():
+    """ Responsible for communication between the database and the templates. """
+
     def __init__(self, fragrance_repository):
         self.fragrance_repository = fragrance_repository
 
     def post_new_fragrance(self, creator, name, designer, nose, description, notes, year):
-        fragrance_id = self.fragrance_repository.add_fragrance(creator, name, designer, nose, description, notes, year)
+        fragrance_id = self.fragrance_repository.add_fragrance(
+            creator, name, designer, nose, description, notes, year)
 
         designers = self.get_all("designers")
         perfumers = self.get_all("perfumers")
@@ -50,5 +54,6 @@ class FragranceService():
 
     def set_visibility(self, table, item_id, visibility=False):
         self.fragrance_repository.set_visibility(table, item_id, visibility)
+
 
 fragrance_service = FragranceService(frag_repository)
