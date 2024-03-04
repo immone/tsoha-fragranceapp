@@ -14,7 +14,7 @@ class UserRepository:
         hash_value = generate_password_hash(password)
         try:
             sql = """INSERT INTO users (name, password, role)
-                         VALUES (:name, :password, :role)"""
+                     VALUES (:name, :password, :role)"""
             db.session.execute(
                 text(sql), {"name": name, "password": hash_value, "role": role})
             db.session.commit()

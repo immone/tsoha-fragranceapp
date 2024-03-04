@@ -15,9 +15,9 @@ class FragranceRepository:
     def get_one_by_id(self, table, get_id):
         """ Returns one element from table specified by the parameter and id. """
         query_map = {
-            "designer": "SELECT * FROM designers WHERE id=:get_id",
+            "designer":  "SELECT * FROM designers WHERE id=:get_id",
             "fragrance": "SELECT * FROM fragrances WHERE id=:get_id",
-            "perfumer": "SELECT * FROM perfumers WHERE id=:get_id",
+            "perfumer":  "SELECT * FROM perfumers WHERE id=:get_id",
         }
         query = query_map[table]
         return self.db.session.execute(text(query), {"get_id": get_id}).fetchone()
@@ -34,25 +34,30 @@ class FragranceRepository:
     def get_all(self, table, param=None):
         """ Returns all elements from table specified by the parameter (and possible parameter) """
         query_map = {
-            "designers": "SELECT id, name FROM designers WHERE visible=true ORDER BY name",
-            "fragrances": "SELECT id, name, designer, created_in FROM fragrances WHERE visible=true ORDER BY name",
-            "fragrances_hidden": "SELECT id, name, designer, created_in FROM fragrances WHERE visible=false ORDER BY name",
-            "groups": "SELECT id, name FROM groups WHERE visible=true ORDER BY name",
-            "reviews": """SELECT reviews.comment, reviews.rating, users.name, reviews.sent_at, reviews.user_id, reviews.id
-                          FROM reviews JOIN users on reviews.user_id=users.id
-                          WHERE reviews.fragrance_id=:param and reviews.visible=true
-                          ORDER by reviews.sent_at""",
-            "all_reviews": "SELECT * from reviews WHERE visible=true ORDER by reviews.sent_at",
-            "user_reviews": """SELECT u.name, u.id, r.comment, r.rating, r.sent_at, f.name, f.designer, f.created_in, f.id 
-                               FROM reviews r 
-                               JOIN users u on r.user_id = u.id
-                               JOIN fragrances f on r.fragrance_id = f.id
-                               WHERE r.visible=true
-                               ORDER by r.sent_at""",
-            "perfumers": "SELECT id, name FROM perfumers WHERE visible=true ORDER BY name",
-            "collection": """SELECT fragrances.name, fragrances.designer, fragrances.id FROM fragrances 
-                             JOIN collections ON fragrances.id = collections.fragrance_id
-                             WHERE collections.user_id=:param"""
+            "designers":          "SELECT id, name FROM designers WHERE visible=true ORDER BY name",
+            "fragrances":         "SELECT id, name, designer, created_in FROM fragrances WHERE visible=true ORDER BY name",
+            "fragrances_hidden":  "SELECT id, name, designer, created_in FROM fragrances WHERE visible=false ORDER BY name",
+            "groups":             "SELECT id, name FROM groups WHERE visible=true ORDER BY name",
+
+            "reviews":            """SELECT reviews.comment, reviews.rating, users.name, reviews.sent_at, reviews.user_id, reviews.id
+                                     FROM reviews JOIN users on reviews.user_id=users.id
+                                     WHERE reviews.fragrance_id=:param and reviews.visible=true
+                                     ORDER by reviews.sent_at""",
+
+            "all_reviews":        "SELECT * from reviews WHERE visible=true ORDER by reviews.sent_at",
+
+            "user_reviews":       """SELECT u.name, u.id, r.comment, r.rating, r.sent_at, f.name, f.designer, f.created_in, f.id 
+                                     FROM reviews r 
+                                     JOIN users u on r.user_id = u.id
+                                     JOIN fragrances f on r.fragrance_id = f.id
+                                     WHERE r.visible=true
+                                     ORDER by r.sent_at""",
+
+            "perfumers":         "SELECT id, name FROM perfumers WHERE visible=true ORDER BY name",
+
+            "collection":        """SELECT fragrances.name, fragrances.designer, fragrances.id FROM fragrances 
+                                    JOIN collections ON fragrances.id = collections.fragrance_id
+                                    WHERE collections.user_id=:param"""
         }
         query = query_map[table]
         if param:
@@ -123,21 +128,21 @@ class FragranceRepository:
         """ Computes averages of ratings. """
 
         query = """SELECT fragrances.name, fragrances.id, AVG(reviews.rating)::numeric(10,2) 
-            FROM reviews
-            JOIN fragrances on reviews.fragrance_id=fragrances.id
-            WHERE reviews.visible=true
-            GROUP BY fragrances.name, fragrances.id
-            ORDER BY AVG(reviews.rating) DESC"""
+                   FROM reviews
+                   JOIN fragrances on reviews.fragrance_id=fragrances.id
+                   WHERE reviews.visible=true
+                   GROUP BY fragrances.name, fragrances.id
+                   ORDER BY AVG(reviews.rating) DESC"""
         avg = db.session.execute(text(query)).fetchall()
         return avg
 
     def compute_average_by_id(self, f_id):
         query = """SELECT AVG(reviews.rating)::numeric(10,2) 
-            FROM reviews
-            JOIN fragrances on reviews.fragrance_id=fragrances.id
-            WHERE fragrances.id=:f_id and reviews.visible=true
-            GROUP BY fragrances.name, fragrances.id
-            ORDER BY AVG(reviews.rating) DESC"""
+                   FROM reviews
+                   JOIN fragrances on reviews.fragrance_id=fragrances.id
+                   WHERE fragrances.id=:f_id and reviews.visible=true
+                   GROUP BY fragrances.name, fragrances.id
+                   ORDER BY AVG(reviews.rating) DESC"""
         avg = db.session.execute(text(query), {"f_id": f_id}).fetchall()
         return avg
 
