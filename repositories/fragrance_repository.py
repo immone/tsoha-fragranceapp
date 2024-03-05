@@ -110,7 +110,6 @@ class FragranceRepository:
         val = db.session.execute(
             text(query), {"u_id": u_id, "f_id": f_id, "f_id2": f_id})
         db.session.commit()
-        print(u_id, f_id, val)
         return val
 
     def compute_stats(self):
