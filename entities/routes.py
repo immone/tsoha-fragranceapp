@@ -101,6 +101,7 @@ def admin():
 def show_user_profile(user_id):
     one = user_service.get_username(user_id)
     query = fragrance_service.get_all("collection", user_id)
+    print(query)
     return render_template("user_profile.html", user=one[0], collection=query)
 
 
@@ -200,7 +201,7 @@ def show_perfumer(perfumer_id):
 def add_to_collection(fragrance_id):
     user_service.check_csrf()
     u_id = user_service.get_user_id()
-    val = fragrance_service.add_to_collection(u_id, fragrance_id)
+    val = fragrance_service.add_to_collection(fragrance_id, u_id)
     if val:
         url = f"/fragrances/{fragrance_id}"
         return redirect(url)

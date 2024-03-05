@@ -47,7 +47,7 @@ Tässä `DATABASE_URL` on viittaus  PostgreSQL-tietokantaan, joka on muotoa `pos
 
 Kun olet käynnistänyt ohjelman paikallisesti, avaa selain ja kirjoita siihen osoite `http://127.0.0.1:5000`. 
 
-Luo ensin uusi käyttäjätunnus (`Log in` -> `Register here`) ja rekisteröidy ylläpitäjänä (valitse `User role: admin`, jonka jälkeen pääset lisäämään tietokantaa uuden hajuveden oikealla olevasta ylläpitäjän paneelista `Admin panel` painamalla nappia `Add a new fragrance`.
+Luo ensin uusi käyttäjätunnus (`Log in` -> `Register here`) ja rekisteröidy ylläpitäjänä (valitse `User role: admin`, jonka jälkeen pääset lisäämään tietokantaa uuden hajuveden oikealla olevasta ylläpitäjän paneelista `Admin panel` painamalla nappia `Add a new fragrance to the database`.
 
 Täytä hajuveden tiedot (hajuvesien kuvien lisääminen tietokantaan ei ole vielä implementoitu). Tietojen lisäämisen jälkeen lisää hajuvesi tietokantaan painamalla `Submit`.
 

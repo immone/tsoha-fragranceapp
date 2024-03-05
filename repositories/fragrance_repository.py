@@ -94,29 +94,27 @@ class FragranceRepository:
 
     def add_review(self, comment, rating, fragrance_id, u_id):
         """ Add review to the database. """
-
         query = """INSERT INTO reviews (comment, rating, sent_at, fragrance_id, user_id, visible) 
                    VALUES (:comment, :rating, NOW(), :fragrance_id, :user_id, true)"""
         db.session.execute(text(query), {
                            "comment": comment, "rating": rating, "fragrance_id": fragrance_id, "user_id": u_id})
         db.session.commit()
 
-    def add_to_collection(self, u_id, f_id):
+    def add_to_collection(self, f_id, u_id):
         """ Add a fragrance to users collection. """
-
         query = """INSERT INTO collections (user_id, fragrance_id)
                    SELECT :u_id, :f_id
                    WHERE NOT EXISTS (
                    SELECT fragrance_id FROM collections WHERE fragrance_id=:f_id2)
-                   RETURNING id """
+                   RETURNING fragrance_id """
         val = db.session.execute(
             text(query), {"u_id": u_id, "f_id": f_id, "f_id2": f_id})
         db.session.commit()
+        print(u_id, f_id, val)
         return val
 
     def compute_stats(self):
         """ Computes the number of items in the database. """
-
         users = db.session.execute(
             text("SELECT COUNT(*) from users")).fetchone()
         fragrances = db.session.execute(
