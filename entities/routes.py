@@ -101,7 +101,6 @@ def admin():
 def show_user_profile(user_id):
     one = user_service.get_username(user_id)
     query = fragrance_service.get_all("collection", user_id)
-    print(query)
     return render_template("user_profile.html", user=one[0], collection=query)
 
 
